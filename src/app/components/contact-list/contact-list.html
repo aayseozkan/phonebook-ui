@@ -1,0 +1,26 @@
+<h2>Rehber Listesi</h2>
+
+<button class="btn btn-primary mb-3" (click)="openAddModal()">Yeni Kişi Ekle</button>
+
+<ag-grid-angular
+  style="width: 100%; height: 400px;"
+  class="ag-theme-alpine"
+  [rowData]="contacts"
+  [columnDefs]="columnDefs"
+  [pagination]="true"
+  [paginationPageSize]="5"
+  [context]="context"
+  [context]="{ componentParent: this }">
+</ag-grid-angular>
+
+<app-contact-add
+  *ngIf="isModalOpen"
+  [editContact]="editContactData"
+  (closeModal)="closeModal()"
+  (operationMessage)="showMessage($event)">
+</app-contact-add>
+
+
+<div *ngIf="message" class="alert alert-success mt-2">
+  {{ message }}
+</div>

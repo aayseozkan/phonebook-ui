@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { ContactList } from './components/contact-list/contact-list';
+import { ContactAdd } from './components/contact-add/contact-add';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  imports: [HttpClientModule, ContactList, ContactAdd],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
