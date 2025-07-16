@@ -1,6 +1,11 @@
-<h2>Rehber Listesi</h2>
+<div class="mb-3 d-flex justify-content-end">
+  <button class="btn btn-outline-primary btn-sm me-2" (click)="switchLanguage('tr')">{{ 'LANG_TR' | translate }}</button>
+  <button class="btn btn-outline-secondary btn-sm" (click)="switchLanguage('en')">{{ 'LANG_EN' | translate }}</button>
+</div>
 
-<button class="btn btn-primary mb-3" (click)="openAddModal()">Yeni Kişi Ekle</button>
+<h2>{{ 'TITLE' | translate }}</h2>
+
+<button class="btn btn-primary mb-3" (click)="openAddModal()">{{ 'ADD_CONTACT' | translate }}</button>
 
 <ag-grid-angular
   style="width: 100%; height: 400px;"

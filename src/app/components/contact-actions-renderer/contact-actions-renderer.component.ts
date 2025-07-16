@@ -1,12 +1,15 @@
 import { Component } from '@angular/core';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { Contact } from '../../models/contact.model';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-contact-actions-renderer',
+  standalone: true,
+  imports: [TranslateModule],
   template: `
-    <button class="btn btn-sm btn-warning" (click)="onEdit()">Düzenle</button>
-    <button class="btn btn-sm btn-danger" (click)="onDelete()">Sil</button>
+    <button class="btn btn-sm btn-warning" (click)="onEdit()">{{ 'EDIT' | translate }}</button>
+    <button class="btn btn-sm btn-danger" (click)="onDelete()">{{ 'DELETE' | translate }}</button>
   `
 })
 export class ContactActionsRenderer implements ICellRendererAngularComp {

@@ -2,13 +2,13 @@
   <div class="modal-dialog" (click)="$event.stopPropagation()">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">{{ isEditMode ? 'Kişiyi Güncelle' : 'Yeni Kişi Ekle' }}</h5>
+        <h5 class="modal-title">{{ isEditMode ? ('EDIT_CONTACT' | translate) : ('NEW_CONTACT' | translate) }}</h5>
         <button type="button" class="btn-close" aria-label="Close" (click)="closeModal.emit()"></button>
       </div>
       <div class="modal-body">
 
         <form (ngSubmit)="saveContact()" #contactForm="ngForm">
-  <label for="firstName">Ad:</label>
+  <label for="firstName">{{ 'FIRST_NAME' | translate }}:</label>
   <input
     type="text"
     id="firstName"
@@ -18,7 +18,7 @@
     class="form-control"
   />
 
-  <label for="lastName" class="mt-3">Soyad:</label>
+  <label for="lastName" class="mt-3">{{ 'LAST_NAME' | translate }}:</label>
   <input
     type="text"
     id="lastName"
@@ -28,7 +28,7 @@
     class="form-control"
   />
 
-  <label for="phoneNumber" class="mt-3">Telefon Numarası:</label>
+  <label for="phoneNumber" class="mt-3">{{ 'PHONE_NUMBER' | translate }}:</label>
   <input
     type="text"
     id="phoneNumber"
@@ -39,7 +39,7 @@
   />
 
   <button type="submit" class="btn btn-primary mt-4">
-    {{ isEditMode ? 'Güncelle' : 'Ekle' }}
+    {{ isEditMode ? ('UPDATE' | translate) : ('ADD' | translate) }}
   </button>
         </form>
 

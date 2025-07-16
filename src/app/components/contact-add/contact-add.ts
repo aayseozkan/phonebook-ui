@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ContactService } from '../../services/contact.service';
 import { Contact } from '../../models/contact.model';
+import { TranslateModule } from '@ngx-translate/core'; 
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-contact-add',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './contact-add.html',
   styleUrl: './contact-add.css'
 })
@@ -20,7 +22,10 @@ export class ContactAdd implements OnChanges {
   message: string = '';
   isEditMode: boolean = false;
 
-  constructor(private contactService: ContactService) {}
+  constructor(
+    private contactService: ContactService, 
+    private translate: TranslateService
+  ) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['editContact'] && this.editContact) {
@@ -40,7 +45,7 @@ export class ContactAdd implements OnChanges {
       !this.contact.lastName.trim() ||
       !this.contact.phoneNumber.trim()
     ) {
-      this.message = 'Lütfen tüm alanları doldurun.';
+      this.message = this.translate.instant('FILL_ALL_FIELDS');
       return;
     }
 
@@ -48,12 +53,12 @@ export class ContactAdd implements OnChanges {
       // Güncelleme
       this.contactService.updateContact(this.contact.id, this.contact).subscribe({
         next: () => {
-          this.operationMessage.emit('Kişi başarıyla güncellendi!');
+          this.operationMessage.emit(this.translate.instant('UPDATE_SUCCESS'));
           this.contactService.notifyContactsChanged();
           this.closeModal.emit();
         },
         error: (err) => {
-          this.message = 'Kişi güncellenirken hata oluştu!';
+          this.message = this.translate.instant('UPDATE_ERROR');
           console.error(err);
         }
       });
@@ -61,13 +66,13 @@ export class ContactAdd implements OnChanges {
       // Ekleme
       this.contactService.addContact(this.contact).subscribe({
         next: () => {
-          this.operationMessage.emit('Kişi başarıyla eklendi!');
+          this.operationMessage.emit(this.translate.instant('ADD_SUCCESS'));
           this.contact = { id: 0, firstName: '', lastName: '', phoneNumber: '' };
           this.contactService.notifyContactsChanged();
           this.closeModal.emit();
         },
         error: (err) => {
-          this.message = 'Kişi eklenirken hata oluştu!';
+          this.message = this.translate.instant('ADD_ERROR');
           console.error(err);
         }
       });

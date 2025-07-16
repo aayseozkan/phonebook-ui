@@ -12,11 +12,13 @@ import { ContactAdd } from '../contact-add/contact-add';
 import { ColDef, ValueGetterParams } from 'ag-grid-community';
 import { AgGridModule } from 'ag-grid-angular';
 import { ContactActionsRenderer } from '../contact-actions-renderer/contact-actions-renderer.component';
+import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-contact-list',
   standalone: true,
-  imports: [CommonModule, ContactAdd, AgGridModule, ContactActionsRenderer],
+  imports: [CommonModule, ContactAdd, AgGridModule, ContactActionsRenderer, TranslateModule],
   templateUrl: './contact-list.html',
   styleUrl: './contact-list.css',
 })
@@ -27,39 +29,55 @@ export class ContactList implements OnInit, OnDestroy {
   gridApi: any;
   gridColumnApi: any;
 
-columnDefs: ColDef<Contact>[] = [
+  columnDefs: ColDef<Contact>[] = [];
+
+constructor(private contactService: ContactService, private translate: TranslateService) {
+  this.translate.setDefaultLang('tr');
+  this.translate.use('tr');
+
+  this.translate.onLangChange.subscribe(() => {
+    this.columnDefs = this.getColumnDefs(); // Dili değişince başlıkları güncelle
+  });
+}
+
+getColumnDefs(): ColDef<Contact>[] {
+  return [
   {
-    headerName: 'ID',
+    headerName: '',
+    headerValueGetter: () => this.translate.instant('ID'),
     field: 'id',
     sortable: true,
     filter: true
   },
   {
-    headerName: 'Ad',
+    headerName: '',
+    headerValueGetter: () => this.translate.instant('FULL_NAME'),
     valueGetter: (params: ValueGetterParams<Contact>) =>
       `${params.data?.firstName ?? ''} ${params.data?.lastName ?? ''}`,
     sortable: true,
     filter: true
   },
   {
-    headerName: 'Telefon',
+    headerName: '',
+    headerValueGetter: () => this.translate.instant('PHONE'),
     field: 'phoneNumber',
     sortable: true,
     filter: true
   },
   {
-    headerName: 'İşlemler',
-    cellRenderer: ContactActionsRenderer, // 🔥 Burası önemli!
+    headerName: '',
+    headerValueGetter: () => this.translate.instant('ACTIONS'),
+    cellRenderer: ContactActionsRenderer,
     sortable: false,
     filter: false
   }
-];
+]};
 
   private contactsChangedSubscription!: Subscription;
 
-  constructor(private contactService: ContactService) {}
-
   ngOnInit(): void {
+    this.columnDefs = this.getColumnDefs();
+    
     this.loadContacts();
 
     this.contactsChangedSubscription = this.contactService.contactsChanged$.subscribe(() => {
@@ -79,7 +97,7 @@ columnDefs: ColDef<Contact>[] = [
   }
 
 deleteContact(id: number): void {
-  const confirmed = confirm('Bu kişiyi silmek istediğinize emin misiniz?');
+  const confirmed = confirm(this.translate.instant('DELETE_CONFIRM'));
   if (confirmed) {
     this.contactService.deleteContact(id).subscribe({
       next: () => {
@@ -88,12 +106,12 @@ deleteContact(id: number): void {
         this.contacts = [...updatedContacts]; // referansı değiştiriyoruz ✔
 
         // Bilgi mesajı göster
-        this.message = 'Kişi başarıyla silindi!';
+        this.message = this.translate.instant('DELETE_SUCCESS');
         setTimeout(() => this.message = '', 3000);
       },
       error: (err) => {
         console.error('Kişi silinirken hata oluştu:', err);
-        this.errorMessage = 'Kişi silinirken bir hata oluştu.';
+        this.errorMessage = this.translate.instant('DELETE_ERROR');
       }
     });
   }
@@ -140,5 +158,9 @@ showMessage(msg: string): void {
 context = {
   componentParent: this,
 };
+
+switchLanguage(lang: string): void {
+  this.translate.use(lang);
+}
 
 }
